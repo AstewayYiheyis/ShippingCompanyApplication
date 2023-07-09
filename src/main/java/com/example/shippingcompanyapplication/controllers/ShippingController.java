@@ -14,17 +14,17 @@ public class ShippingController {
     ShippingService shippingService;
 
     @Autowired
-    ShippingController(final ShippingService shippingService){
+    ShippingController(final ShippingService shippingService) {
         this.shippingService = shippingService;
     }
 
     @PostMapping("/sendPackage")
-    public ResponseEntity<PackageInformation> shipPackage(@RequestBody ShippedPackage shippedPackage){
+    public ResponseEntity<PackageInformation> shipPackage(@RequestBody ShippedPackage shippedPackage) {
         return new ResponseEntity(shippingService.shipPackage(shippedPackage), HttpStatusCode.valueOf(200));
     }
 
     @GetMapping
-    public ResponseEntity<PackageInformation> trackPackage(@RequestParam("trackingNumber") String trackingNumber){
+    public ResponseEntity<PackageInformation> trackPackage(@RequestParam("trackingNumber") String trackingNumber) {
         return new ResponseEntity(shippingService.trackPackage(trackingNumber), HttpStatusCode.valueOf(200));
     }
 }
