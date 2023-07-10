@@ -1,5 +1,6 @@
 package com.example.shippingcompanyapplication.config;
 
+import com.example.shippingcompanyapplication.repositories.UserRepo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final JwtUtils jwtUtils;
+    private final UserRepo userRepo;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -39,7 +42,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         userEmail = jwtUtils.extractUsername(jwtToken);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = userRepo.findUserByEmail(userEmail);
 
             if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null,

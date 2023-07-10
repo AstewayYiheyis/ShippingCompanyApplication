@@ -1,5 +1,6 @@
 package com.example.shippingcompanyapplication.config;
 
+import com.example.shippingcompanyapplication.repositories.UserRepo;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +12,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,19 +31,7 @@ import java.util.List;
 @Configuration
 public class SpringSecurityConfiguration {
     private final Filter jwtAuthFilter;
-
-    private final static List<UserDetails> APPLICATION_USERS = Arrays.asList(
-            new User(
-                    "admin123@gmail.com",
-                    "password",
-                    Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"))
-            ),
-            new User(
-                    "user123@gmail.com",
-                    "password",
-                    Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
-            )
-    );
+    private final UserRepo userRepo;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -62,20 +49,12 @@ public class SpringSecurityConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return email -> APPLICATION_USERS
-                .stream()
-                .filter(u -> u.getUsername().equals(email))
-                .findFirst()
-                .orElseThrow(() -> new UsernameNotFoundException("No user was found!"));
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-
-        return authenticationProvider;
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+                return userRepo.findUserByEmail(email);
+            }
+        };
     }
 
     @Bean

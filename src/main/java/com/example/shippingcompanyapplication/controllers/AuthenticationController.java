@@ -2,6 +2,7 @@ package com.example.shippingcompanyapplication.controllers;
 
 import com.example.shippingcompanyapplication.config.JwtUtils;
 import com.example.shippingcompanyapplication.dto.AuthenticationRequest;
+import com.example.shippingcompanyapplication.repositories.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
-    private JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
+    private final UserRepo userRepo;
 
     @PostMapping("/authenticate")
     public ResponseEntity<String> authenticate(
@@ -28,7 +29,7 @@ public class AuthenticationController {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-        final UserDetails user = userDetailsService.loadUserByUsername(request.getEmail());
+        final UserDetails user = userRepo.findUserByEmail(request.getEmail());
 
         if(user != null){
             return ResponseEntity.ok(jwtUtils.generateToken(user));
