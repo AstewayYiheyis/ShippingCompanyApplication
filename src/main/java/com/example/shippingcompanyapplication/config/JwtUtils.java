@@ -41,6 +41,12 @@ public class JwtUtils {
         return createToken(claims, userDetails);
     }
 
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+
+        return createToken(claims, userDetails);
+    }
+
     private String createToken(Map<String, Object> claims, UserDetails subject) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
