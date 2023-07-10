@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/shipping")
+@RequestMapping("/api/v1/shipping")
 public class ShippingController {
     ShippingService shippingService;
 
