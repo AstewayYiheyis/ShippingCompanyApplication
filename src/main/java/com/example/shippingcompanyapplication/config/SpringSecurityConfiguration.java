@@ -28,7 +28,12 @@ public class SpringSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeHttpRequests()
+                .requestMatchers("/**/auth/**")
+                .permitAll()
+                .requestMatchers("/**/sendPackage")
+                .hasAuthority("ROLE_ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
