@@ -2,7 +2,7 @@ package com.example.shippingcompanyapplication.controllers;
 
 import com.example.shippingcompanyapplication.entities.PackageInformation;
 import com.example.shippingcompanyapplication.entities.ShippedPackage;
-import com.example.shippingcompanyapplication.services.ShippingService;
+import com.example.shippingcompanyapplication.services.ShippingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/shipping")
 public class ShippingController {
-    ShippingService shippingService;
+    ShippingServiceImpl shippingService;
 
     @Autowired
-    ShippingController(final ShippingService shippingService) {
+    ShippingController(final ShippingServiceImpl shippingService) {
         this.shippingService = shippingService;
     }
 
