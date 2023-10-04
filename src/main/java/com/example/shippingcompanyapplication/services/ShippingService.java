@@ -1,7 +1,9 @@
 package com.example.shippingcompanyapplication.services;
 
-import com.example.shippingcompanyapplication.entities.PackageInformation;
+import com.example.shippingcompanyapplication.PricingClient;
+import com.example.shippingcompanyapplication.entities.PackageDetail;
 import com.example.shippingcompanyapplication.entities.ShippedPackage;
+import com.example.shippingcompanyapplication.entities.ShippmentInformation;
 import com.example.shippingcompanyapplication.repositories.ShippingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +17,15 @@ public class ShippingService {
     EmailService emailService;
     ShippingRepository shippingRepository;
 
+    PricingClient pricingClient;
     @Autowired
-    ShippingService(final EmailService emailService, final ShippingRepository shippingRepository){
+    ShippingService(final EmailService emailService, final ShippingRepository shippingRepository, PricingClient pricingClient){
         this.emailService = emailService;
         this.shippingRepository = shippingRepository;
+        this.pricingClient = pricingClient;
     }
 
-    public PackageInformation shipPackage(ShippedPackage shippedPackage) {
+    public ShippmentInformation shipPackage(ShippedPackage shippedPackage) {
         // generate tracking number make sure it is not duplicate by checking the database
         String trackingNumber = generateTrackingNumber();
         boolean isNotDuplicate = checkForDuplicateTrackingNumber(trackingNumber);
@@ -47,9 +51,15 @@ public class ShippingService {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
 
-        PackageInformation packageInformation = PackageInformation.builder()
+        PackageDetail packageDetail = PackageDetail.builder().weight(shippedPackage.getWeight())
+                .shippingtype(shippedPackage.getShippingtype()).build();
+
+        // get pricing from pricing service
+        double price = pricingClient.getPricing(packageDetail);
+
+        ShippmentInformation packageInformation = ShippmentInformation.builder()
                 .productName(shippedPackage.productName).productDescription(shippedPackage.productDescription)
-                .trackingNumber(trackingNumber).shippedDate(formatter.format(date)).build();
+                .trackingNumber(trackingNumber).shippedDate(formatter.format(date)).price(price).build();
 
         return packageInformation;
     }
@@ -76,10 +86,10 @@ public class ShippingService {
         return count == 0;
     }
 
-    public PackageInformation trackPackage(String trackingNumber) {
+    public ShippmentInformation trackPackage(String trackingNumber) {
         ShippedPackage shippedPackage = shippingRepository.findByTrackingNumber(trackingNumber);
 
-        return PackageInformation.builder()
+        return ShippmentInformation.builder()
                 .productName(shippedPackage.productName)
                 .productDescription(shippedPackage.productDescription)
                 .trackingNumber(shippedPackage.trackingNumber)

@@ -9,14 +9,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class PackageInformation {
+public class ShippmentInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long productInformationId;
@@ -24,4 +22,5 @@ public class PackageInformation {
     public String productDescription;
     public String trackingNumber;
     public String shippedDate;
+    public double price;
 }
