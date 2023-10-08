@@ -57,11 +57,11 @@ public class ShippingService {
         // get pricing from pricing service
         double price = pricingClient.getPricing(packageDetail);
 
-        ShippmentInformation packageInformation = ShippmentInformation.builder()
+        ShippmentInformation shippmentInformation = ShippmentInformation.builder()
                 .productName(shippedPackage.productName).productDescription(shippedPackage.productDescription)
                 .trackingNumber(trackingNumber).shippedDate(formatter.format(date)).price(price).build();
 
-        return packageInformation;
+        return shippmentInformation;
     }
 
     public String generateTrackingNumber(){

@@ -3,7 +3,6 @@ package com.example.shippingcompanyapplication;
 import com.example.shippingcompanyapplication.entities.PackageDetail;
 import com.example.shippingcompanyapplication.entities.PricingInfo;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

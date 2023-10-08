@@ -15,7 +15,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 public class CommonConfiguration implements WebMvcConfigurer {
     @Bean
-    public RestTemplate restTemplateBean(){
+    public RestTemplate restTemplateBean() {
         return new RestTemplate();
     }
 
