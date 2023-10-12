@@ -1,5 +1,6 @@
 package com.example.shippingcompanyapplication.entities;
 
+import com.example.shippingcompanyapplication.common_classes.ShippingType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +21,8 @@ public class ShippedPackage {
     @ManyToOne
     public Customer customer;
     public String trackingNumber;
+    public double weight;
+    public ShippingType shippingtype;
 
     public Long getId() {
         return id;
