@@ -1,4 +1,4 @@
-package com.example.shippingcompanyapplication.entities;
+package com.example.shippingcompanyapplication;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

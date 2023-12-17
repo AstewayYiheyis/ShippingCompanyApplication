@@ -1,6 +1,6 @@
 package com.example.shippingcompanyapplication.controllers;
 
-import com.example.shippingcompanyapplication.entities.ShippmentInformation;
+import com.example.shippingcompanyapplication.entities.ShipmentInformation;
 import com.example.shippingcompanyapplication.entities.ShippedPackage;
 import com.example.shippingcompanyapplication.services.ShippingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,12 @@ public class ShippingController {
     }
 
     @PostMapping("/sendPackage")
-    public ResponseEntity<ShippmentInformation> shipPackage(@RequestBody ShippedPackage shippedPackage){
+    public ResponseEntity<ShipmentInformation> shipPackage(@RequestBody ShippedPackage shippedPackage){
         return new ResponseEntity(shippingService.shipPackage(shippedPackage), HttpStatusCode.valueOf(200));
     }
 
     @GetMapping
-    public ResponseEntity<ShippmentInformation> trackPackage(@RequestParam("trackingNumber") String trackingNumber){
+    public ResponseEntity<ShipmentInformation> trackPackage(@RequestParam("trackingNumber") String trackingNumber){
         return new ResponseEntity(shippingService.trackPackage(trackingNumber), HttpStatusCode.valueOf(200));
     }
 }

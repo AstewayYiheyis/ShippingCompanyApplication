@@ -1,10 +1,10 @@
 package com.example.shippingcompanyapplication.repositories;
 
-import com.example.shippingcompanyapplication.entities.ShippmentInformation;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.shippingcompanyapplication.entities.ShipmentInformation;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PackageInformationRepository extends JpaRepository<ShippmentInformation, Integer> {
-    ShippmentInformation save(ShippmentInformation packageInformation);
+public interface PackageInformationRepository extends MongoRepository<ShipmentInformation, Integer> {
+    ShipmentInformation save(ShipmentInformation packageInformation);
 }
