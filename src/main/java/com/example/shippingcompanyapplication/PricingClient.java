@@ -1,7 +1,5 @@
 package com.example.shippingcompanyapplication;
 
-import com.example.shippingcompanyapplication.entities.PackageDetail;
-import com.example.shippingcompanyapplication.entities.PricingInfo;
 import lombok.SneakyThrows;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;

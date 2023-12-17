@@ -1,9 +1,10 @@
 package com.example.shippingcompanyapplication.services;
 
 import com.example.shippingcompanyapplication.PricingClient;
-import com.example.shippingcompanyapplication.entities.PackageDetail;
+import com.example.shippingcompanyapplication.PackageDetail;
+import com.example.shippingcompanyapplication.consumers.NotificationService;
 import com.example.shippingcompanyapplication.entities.ShippedPackage;
-import com.example.shippingcompanyapplication.entities.ShippmentInformation;
+import com.example.shippingcompanyapplication.entities.ShipmentInformation;
 import com.example.shippingcompanyapplication.repositories.ShippingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,18 +15,18 @@ import java.util.Date;
 
 @Service
 public class ShippingService {
-    EmailService emailService;
+    NotificationService notificationService;
     ShippingRepository shippingRepository;
 
     PricingClient pricingClient;
     @Autowired
-    ShippingService(final EmailService emailService, final ShippingRepository shippingRepository, PricingClient pricingClient){
-        this.emailService = emailService;
+    ShippingService(final NotificationService notificationService, final EmailService emailService, final ShippingRepository shippingRepository, PricingClient pricingClient){
+        this.notificationService = notificationService;
         this.shippingRepository = shippingRepository;
         this.pricingClient = pricingClient;
     }
 
-    public ShippmentInformation shipPackage(ShippedPackage shippedPackage) {
+    public ShipmentInformation shipPackage(ShippedPackage shippedPackage) {
         // generate tracking number make sure it is not duplicate by checking the database
         String trackingNumber = generateTrackingNumber();
         boolean isNotDuplicate = checkForDuplicateTrackingNumber(trackingNumber);
@@ -41,7 +42,7 @@ public class ShippingService {
         if(shippedPackage.customer != null){
             // need something to handle exception in case if there is an error when sending an email
             try{
-                emailService.sendEmail(shippedPackage.customer.email);
+                notificationService.sendNotification(shippedPackage.customer.email);
             }
             catch(Exception ex){
                 System.out.println(ex.getMessage());
@@ -57,9 +58,9 @@ public class ShippingService {
         // get pricing from pricing service
         double price = pricingClient.getPricing(packageDetail);
 
-        ShippmentInformation shippmentInformation = ShippmentInformation.builder()
-                .productName(shippedPackage.productName).productDescription(shippedPackage.productDescription)
-                .trackingNumber(trackingNumber).shippedDate(formatter.format(date)).price(price).build();
+        ShipmentInformation shippmentInformation = new ShipmentInformation(
+                shippedPackage.productName,
+                shippedPackage.productDescription, trackingNumber, formatter.format(date), price);
 
         return shippmentInformation;
     }
@@ -86,13 +87,12 @@ public class ShippingService {
         return count == 0;
     }
 
-    public ShippmentInformation trackPackage(String trackingNumber) {
+    public ShipmentInformation trackPackage(String trackingNumber) {
         ShippedPackage shippedPackage = shippingRepository.findByTrackingNumber(trackingNumber);
 
-        return ShippmentInformation.builder()
-                .productName(shippedPackage.productName)
-                .productDescription(shippedPackage.productDescription)
-                .trackingNumber(shippedPackage.trackingNumber)
-                .build();
+        ShipmentInformation shippmentInformation = new ShipmentInformation(shippedPackage.getProductName(),
+                shippedPackage.getProductDescription(), shippedPackage.getTrackingNumber(), shippedPackage.getShippedDate(), shippedPackage.getPrice());
+
+        return shippmentInformation;
     }
 }
