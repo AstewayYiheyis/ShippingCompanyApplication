@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class ShipmentInformation {
     @Id
-    public long productInformationId;
+    public String productInformationId;
     public String productName;
     public String productDescription;
     public String trackingNumber;
@@ -29,11 +29,11 @@ public class ShipmentInformation {
         this.price = price;
     }
 
-    public long getProductInformationId() {
+    public String getProductInformationId() {
         return productInformationId;
     }
 
-    public void setProductInformationId(long productInformationId) {
+    public void setProductInformationId(String productInformationId) {
         this.productInformationId = productInformationId;
     }
 
