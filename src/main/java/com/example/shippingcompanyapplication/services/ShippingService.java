@@ -20,7 +20,7 @@ public class ShippingService {
 
     PricingClient pricingClient;
     @Autowired
-    ShippingService(final NotificationService notificationService, final EmailService emailService, final ShippingRepository shippingRepository, PricingClient pricingClient){
+    ShippingService(final NotificationService notificationService, final ShippingRepository shippingRepository, final PricingClient pricingClient){
         this.notificationService = notificationService;
         this.shippingRepository = shippingRepository;
         this.pricingClient = pricingClient;

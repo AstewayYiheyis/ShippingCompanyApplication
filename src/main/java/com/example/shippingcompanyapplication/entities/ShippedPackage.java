@@ -2,16 +2,12 @@ package com.example.shippingcompanyapplication.entities;
 
 import com.example.shippingcompanyapplication.common_classes.ShippingType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class ShippedPackage {
     @Id
-    private Long id;
+    private String id;
     public String productName;
     public String productDescription;
     @ManyToOne(cascade = CascadeType.ALL)
@@ -51,7 +47,7 @@ public class ShippedPackage {
         this.shippedDate = shippedDate;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

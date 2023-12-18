@@ -11,6 +11,6 @@ public class NotificationService {
 
     public void sendNotification(String email)
     {
-        kafkaTemplate.send("email_topic", email);
+        kafkaTemplate.send("shipping_email_topic", email);
     }
 }
