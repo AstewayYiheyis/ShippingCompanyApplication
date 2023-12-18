@@ -1,19 +1,12 @@
 package com.example.shippingcompanyapplication.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class ShipmentInformation {
     @Id
-    public String productInformationId;
+    public String id;
     public String productName;
     public String productDescription;
     public String trackingNumber;
@@ -29,12 +22,12 @@ public class ShipmentInformation {
         this.price = price;
     }
 
-    public String getProductInformationId() {
-        return productInformationId;
+    public String getId() {
+        return id;
     }
 
-    public void setProductInformationId(String productInformationId) {
-        this.productInformationId = productInformationId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getProductName() {

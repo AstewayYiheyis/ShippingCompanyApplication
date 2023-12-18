@@ -1,10 +1,12 @@
 package com.example.shippingcompanyapplication.services;
 
-import com.example.shippingcompanyapplication.PricingClient;
 import com.example.shippingcompanyapplication.PackageDetail;
+import com.example.shippingcompanyapplication.PricingClient;
 import com.example.shippingcompanyapplication.consumers.NotificationService;
-import com.example.shippingcompanyapplication.entities.ShippedPackage;
+import com.example.shippingcompanyapplication.dto.ShipmentInformationDTO;
 import com.example.shippingcompanyapplication.entities.ShipmentInformation;
+import com.example.shippingcompanyapplication.entities.ShippedPackage;
+import com.example.shippingcompanyapplication.repositories.PackageInformationRepository;
 import com.example.shippingcompanyapplication.repositories.ShippingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,21 +19,25 @@ import java.util.Date;
 public class ShippingService {
     NotificationService notificationService;
     ShippingRepository shippingRepository;
+    PackageInformationRepository packageInformationRepository;
+
 
     PricingClient pricingClient;
+
     @Autowired
-    ShippingService(final NotificationService notificationService, final ShippingRepository shippingRepository, final PricingClient pricingClient){
+    ShippingService(final NotificationService notificationService, final ShippingRepository shippingRepository, final PricingClient pricingClient, final PackageInformationRepository packageInformationRepository) {
         this.notificationService = notificationService;
         this.shippingRepository = shippingRepository;
         this.pricingClient = pricingClient;
+        this.packageInformationRepository = packageInformationRepository;
     }
 
-    public ShipmentInformation shipPackage(ShippedPackage shippedPackage) {
+    public ShipmentInformationDTO shipPackage(ShippedPackage shippedPackage) {
         // generate tracking number make sure it is not duplicate by checking the database
         String trackingNumber = generateTrackingNumber();
         boolean isNotDuplicate = checkForDuplicateTrackingNumber(trackingNumber);
 
-        while(!isNotDuplicate){
+        while (!isNotDuplicate) {
             trackingNumber = generateTrackingNumber();
             isNotDuplicate = checkForDuplicateTrackingNumber(trackingNumber);
         }
@@ -39,12 +45,11 @@ public class ShippingService {
 
         shippingRepository.save(shippedPackage);
 
-        if(shippedPackage.customer != null){
+        if (shippedPackage.customer != null) {
             // need something to handle exception in case if there is an error when sending an email
-            try{
+            try {
                 notificationService.sendNotification(shippedPackage.customer.email);
-            }
-            catch(Exception ex){
+            } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
         }
@@ -58,14 +63,20 @@ public class ShippingService {
         // get pricing from pricing service
         double price = pricingClient.getPricing(packageDetail);
 
-        ShipmentInformation shippmentInformation = new ShipmentInformation(
+        ShipmentInformation shipmentInformation = new ShipmentInformation(
                 shippedPackage.productName,
                 shippedPackage.productDescription, trackingNumber, formatter.format(date), price);
+        ShipmentInformation packageInformation = packageInformationRepository.save(shipmentInformation);
 
-        return shippmentInformation;
+        return ShipmentInformationDTO.builder()
+                .productName(packageInformation.productName)
+                .productDescription(packageInformation.productDescription)
+                .trackingNumber(packageInformation.getTrackingNumber())
+                .shippedDate(packageInformation.getShippedDate())
+                .price(packageInformation.getPrice()).build();
     }
 
-    public String generateTrackingNumber(){
+    public String generateTrackingNumber() {
         StringBuilder trackingNumber = new StringBuilder("AB");
 
         SecureRandom secureRandom = new SecureRandom();
@@ -80,7 +91,7 @@ public class ShippingService {
     public boolean checkForDuplicateTrackingNumber(String trackingNumber) {
         Integer count = shippingRepository.countNumberOfOrders(trackingNumber);
 
-        if(count == null){
+        if (count == null) {
             return true;
         }
 
