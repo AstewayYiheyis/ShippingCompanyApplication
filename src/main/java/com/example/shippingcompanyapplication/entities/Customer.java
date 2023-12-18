@@ -1,34 +1,27 @@
 package com.example.shippingcompanyapplication.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Customer {
     @Id
-    public long id;
+    public String id;
     public String name;
     public String email;
 
-    public Customer(long id, String name, String email) {
+    public Customer(String id, String name, String email) {
         super();
         this.id = id;
         this.name = name;
         this.email = email;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

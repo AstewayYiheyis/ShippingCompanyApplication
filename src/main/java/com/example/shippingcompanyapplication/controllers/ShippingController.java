@@ -1,5 +1,6 @@
 package com.example.shippingcompanyapplication.controllers;
 
+import com.example.shippingcompanyapplication.dto.ShipmentInformationDTO;
 import com.example.shippingcompanyapplication.entities.ShipmentInformation;
 import com.example.shippingcompanyapplication.entities.ShippedPackage;
 import com.example.shippingcompanyapplication.services.ShippingService;
@@ -24,7 +25,7 @@ public class ShippingController {
     }
 
     @GetMapping
-    public ResponseEntity<ShipmentInformation> trackPackage(@RequestParam("trackingNumber") String trackingNumber){
+    public ResponseEntity<ShipmentInformationDTO> trackPackage(@RequestParam("trackingNumber") String trackingNumber){
         return new ResponseEntity(shippingService.trackPackage(trackingNumber), HttpStatusCode.valueOf(200));
     }
 }
