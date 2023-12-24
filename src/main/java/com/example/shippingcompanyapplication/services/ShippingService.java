@@ -98,12 +98,17 @@ public class ShippingService {
         return count == 0;
     }
 
-    public ShipmentInformation trackPackage(String trackingNumber) {
+    public ShipmentInformationDTO trackPackage(String trackingNumber) {
         ShippedPackage shippedPackage = shippingRepository.findByTrackingNumber(trackingNumber);
 
         ShipmentInformation shippmentInformation = new ShipmentInformation(shippedPackage.getProductName(),
                 shippedPackage.getProductDescription(), shippedPackage.getTrackingNumber(), shippedPackage.getShippedDate(), shippedPackage.getPrice());
 
-        return shippmentInformation;
+        return ShipmentInformationDTO.builder()
+                .productName(shippedPackage.productName)
+                .productDescription(shippedPackage.productDescription)
+                .trackingNumber(shippedPackage.getTrackingNumber())
+                .shippedDate(shippedPackage.getShippedDate())
+                .price(shippedPackage.getPrice()).build();
     }
 }
