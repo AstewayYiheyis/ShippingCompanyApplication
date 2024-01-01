@@ -1,4 +1,4 @@
-package com.example.shippingcompanyapplication.consumers;
+package com.example.shippingcompanyapplication.producers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
