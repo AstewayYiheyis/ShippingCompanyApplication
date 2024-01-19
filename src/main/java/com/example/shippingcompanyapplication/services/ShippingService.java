@@ -2,7 +2,7 @@ package com.example.shippingcompanyapplication.services;
 
 import com.example.shippingcompanyapplication.PackageDetail;
 import com.example.shippingcompanyapplication.PricingClient;
-import com.example.shippingcompanyapplication.consumers.NotificationService;
+import com.example.shippingcompanyapplication.producers.NotificationService;
 import com.example.shippingcompanyapplication.dto.ShipmentInformationDTO;
 import com.example.shippingcompanyapplication.entities.ShipmentInformation;
 import com.example.shippingcompanyapplication.entities.ShippedPackage;
@@ -98,12 +98,14 @@ public class ShippingService {
         return count == 0;
     }
 
-    public ShipmentInformation trackPackage(String trackingNumber) {
-        ShippedPackage shippedPackage = shippingRepository.findByTrackingNumber(trackingNumber);
+    public ShipmentInformationDTO trackPackage(String trackingNumber) {
+        ShipmentInformation shipmentInformation = packageInformationRepository.findByTrackingNumber(trackingNumber);
 
-        ShipmentInformation shippmentInformation = new ShipmentInformation(shippedPackage.getProductName(),
-                shippedPackage.getProductDescription(), shippedPackage.getTrackingNumber(), shippedPackage.getShippedDate(), shippedPackage.getPrice());
-
-        return shippmentInformation;
+        return ShipmentInformationDTO.builder()
+                .productName(shipmentInformation.productName)
+                .productDescription(shipmentInformation.productDescription)
+                .trackingNumber(shipmentInformation.getTrackingNumber())
+                .shippedDate(shipmentInformation.getShippedDate())
+                .price(shipmentInformation.getPrice()).build();
     }
 }
