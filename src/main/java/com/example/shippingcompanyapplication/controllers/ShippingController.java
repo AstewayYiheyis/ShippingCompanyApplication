@@ -31,11 +31,15 @@ public class ShippingController {
         return new ResponseEntity(shippingService.shipPackage(shippedPackage), HttpStatusCode.valueOf(200));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePackage(@PathVariable("id") String id)
+    {
+        return new ResponseEntity(shippingService.deletePackage(id), HttpStatusCode.valueOf(204));
+    }
+
     @GetMapping
     @Cacheable(value = "shipmentInformation")
     public ResponseEntity<ShipmentInformationDTO> trackPackage(@RequestParam("trackingNumber") String trackingNumber){
-        logger.info("Inside trackPackage method");
-
         return new ResponseEntity(shippingService.trackPackage(trackingNumber), HttpStatusCode.valueOf(200));
     }
 }
