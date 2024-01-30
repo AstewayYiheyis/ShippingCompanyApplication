@@ -9,6 +9,7 @@ import com.example.shippingcompanyapplication.entities.ShippedPackage;
 import com.example.shippingcompanyapplication.repositories.PackageInformationRepository;
 import com.example.shippingcompanyapplication.repositories.ShippingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -107,5 +108,11 @@ public class ShippingService {
                 .trackingNumber(shipmentInformation.getTrackingNumber())
                 .shippedDate(shipmentInformation.getShippedDate())
                 .price(shipmentInformation.getPrice()).build();
+    }
+
+    public ResponseEntity<Void> deletePackage(String id) {
+        shippingRepository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
